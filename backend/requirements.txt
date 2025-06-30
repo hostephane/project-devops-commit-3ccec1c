@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+transformers
+sentencepiece
+easyocr
+python-multipart
+pillow
+torch
+httpx
+psutil
+pytest
