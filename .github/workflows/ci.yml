@@ -12,19 +12,26 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Setup Python and Install DVC
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
 
-      - name: Install backend dependencies
+      - name: Upgrade pip, install DVC and pull data
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
+          pip install "dvc[s3]"
+          dvc pull
+
+      - name: Install backend dependencies
+        run: pip install -r backend/requirements.txt
 
       - name: Run backend tests
         working-directory: ./backend
@@ -123,7 +130,6 @@ jobs:
       - name: Stop backend container
         if: always()
         run: docker stop backend-container || true
-
 
   build-and-deploy:
     needs: build-and-test

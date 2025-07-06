@@ -1,0 +1,4 @@
+[core]
+    remote = project-devops
+['remote "project-devops"']
+    url = s3://dvc-project-devops/data
